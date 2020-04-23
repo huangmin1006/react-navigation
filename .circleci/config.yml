@@ -42,6 +42,14 @@ jobs:
         - store_artifacts:
             path: coverage
             destination: coverage
+  integration-tests:
+      <<: *defaults
+      steps:
+        - attach_workspace:
+            at: ~/project
+        - run: |
+            yarn example expo build:web --no-pwa
+            yarn example test
   build-packages:
       <<: *defaults
       steps:
@@ -60,6 +68,9 @@ workflows:
           requires:
             - install-dependencies
       - unit-tests:
+          requires:
+            - install-dependencies
+      - integration-tests:
           requires:
             - install-dependencies
       - build-packages:
